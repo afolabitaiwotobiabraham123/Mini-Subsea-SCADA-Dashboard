@@ -1,8 +1,8 @@
 # Mini Subsea SCADA System (3 Wells + Manifold)
 
-## Mini Subsea SCADA Node-RED Flow Screenshot
+## Dashboard Screenshot
 
-![Mini Subsea SCADA Node-RED Flow](Mini Subsea SCADA Node-RED Flow.png)
+![Dashboard](dashboard-screenshot.png)
 
 ## Project Overview
 
