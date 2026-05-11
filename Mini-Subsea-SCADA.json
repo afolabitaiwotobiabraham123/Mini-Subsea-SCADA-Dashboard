@@ -1,0 +1,304 @@
+[
+    {
+        "id": "f0a9a0b52d4b05ee",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4e9fab85fb23ded0",
+        "type": "inject",
+        "z": "f0a9a0b52d4b05ee",
+        "name": "WELL1",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 499.99998474121094,
+        "y": 321.666654586792,
+        "wires": [
+            [
+                "ad950b02827f9c15"
+            ]
+        ]
+    },
+    {
+        "id": "4395c93ba015faf6",
+        "type": "inject",
+        "z": "f0a9a0b52d4b05ee",
+        "name": "WELL2",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 499.99998474121094,
+        "y": 381.666654586792,
+        "wires": [
+            [
+                "68abc56cc6041761"
+            ]
+        ]
+    },
+    {
+        "id": "8b92e1221537e16b",
+        "type": "inject",
+        "z": "f0a9a0b52d4b05ee",
+        "name": "WELL3",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 499.99998474121094,
+        "y": 441.666654586792,
+        "wires": [
+            [
+                "b55a920032988509"
+            ]
+        ]
+    },
+    {
+        "id": "ad950b02827f9c15",
+        "type": "function",
+        "z": "f0a9a0b52d4b05ee",
+        "name": "WELL1 DATA",
+        "func": "msg.payload = {\n    well: \"Well 1\",\n    pressure: Math.floor(Math.random() * 120 + 180), // 180–300 bar\n    flow: Math.floor(Math.random() * 2000 + 3000)     // 3000–5000 stb/d\n};\n// SAVE to global memory\nglobal.set(\"W1\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 699.9999847412109,
+        "y": 321.666654586792,
+        "wires": [
+            [
+                "45e0431150023ab1"
+            ]
+        ]
+    },
+    {
+        "id": "68abc56cc6041761",
+        "type": "function",
+        "z": "f0a9a0b52d4b05ee",
+        "name": "WELL2 DATA",
+        "func": "msg.payload = {\n    well: \"Well 2\",\n    pressure: Math.floor(Math.random() * 100 + 160),\n    flow: Math.floor(Math.random() * 1800 + 2500)\n};\n// SAVE to global memory\nglobal.set(\"W2\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 699.9999847412109,
+        "y": 381.666654586792,
+        "wires": [
+            [
+                "45e0431150023ab1"
+            ]
+        ]
+    },
+    {
+        "id": "b55a920032988509",
+        "type": "function",
+        "z": "f0a9a0b52d4b05ee",
+        "name": "WELL3 DATA",
+        "func": "msg.payload = {\n    well: \"Well 3\",\n    pressure: Math.floor(Math.random() * 140 + 190),\n    flow: Math.floor(Math.random() * 2200 + 2800)\n};\n// SAVE to global memory\nglobal.set(\"W3\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 699.9999847412109,
+        "y": 441.666654586792,
+        "wires": [
+            [
+                "45e0431150023ab1"
+            ]
+        ]
+    },
+    {
+        "id": "45e0431150023ab1",
+        "type": "function",
+        "z": "f0a9a0b52d4b05ee",
+        "name": "MANIFOLD FUNCTION",
+        "func": "let w1 = global.get(\"W1\") || {flow:0};\nlet w2 = global.get(\"W2\") || {flow:0};\nlet w3 = global.get(\"W3\") || {flow:0};\n\nlet totalFlow = w1.flow + w2.flow + w3.flow;\n\nmsg.payload = {\n    totalFlow: totalFlow,\n    status: \"MANIFOLD ACTIVE\"\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 380,
+        "wires": [
+            [
+                "19672eaf7074eef1"
+            ]
+        ]
+    },
+    {
+        "id": "19672eaf7074eef1",
+        "type": "function",
+        "z": "f0a9a0b52d4b05ee",
+        "name": "ALARM FUNCTION",
+        "func": "if (msg.payload.totalFlow < 2000) {\n    msg.payload.alarm = \"CRITICAL LOW PRODUCTION 🔴\";\n} else if (msg.payload.totalFlow < 4000) {\n    msg.payload.alarm = \"WARNING 🟠\";\n} else {\n    msg.payload.alarm = \"NORMAL 🟢\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1299.999984741211,
+        "y": 381.666654586792,
+        "wires": [
+            [
+                "881ec6f7cdff68f2",
+                "1fd032f2ae177283",
+                "0a7f721dd584c6d0"
+            ]
+        ]
+    },
+    {
+        "id": "1ccd22303f0344ca",
+        "type": "ui_gauge",
+        "z": "f0a9a0b52d4b05ee",
+        "name": "",
+        "group": "5284874c8a74eef1",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "gauge",
+        "label": "stb/d",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "15000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1869.999984741211,
+        "y": 301.666654586792,
+        "wires": []
+    },
+    {
+        "id": "1fd032f2ae177283",
+        "type": "ui_text",
+        "z": "f0a9a0b52d4b05ee",
+        "group": "5284874c8a74eef1",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "System Status",
+        "format": "{{msg.payload.status}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1739.999984741211,
+        "y": 381.666654586792,
+        "wires": []
+    },
+    {
+        "id": "0a7f721dd584c6d0",
+        "type": "ui_text",
+        "z": "f0a9a0b52d4b05ee",
+        "group": "5284874c8a74eef1",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Alarm",
+        "format": "{{msg.payload.alarm}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1729.999984741211,
+        "y": 461.666654586792,
+        "wires": []
+    },
+    {
+        "id": "881ec6f7cdff68f2",
+        "type": "function",
+        "z": "f0a9a0b52d4b05ee",
+        "name": "function 2",
+        "func": "msg.payload = msg.payload.totalFlow;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1719.999984741211,
+        "y": 301.666654586792,
+        "wires": [
+            [
+                "1ccd22303f0344ca"
+            ]
+        ]
+    },
+    {
+        "id": "5284874c8a74eef1",
+        "type": "ui_group",
+        "name": "Control Room ",
+        "tab": "7dcb0ac161edfb88",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": "Production"
+    },
+    {
+        "id": "7dcb0ac161edfb88",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "29e2774d1e6912f5",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
