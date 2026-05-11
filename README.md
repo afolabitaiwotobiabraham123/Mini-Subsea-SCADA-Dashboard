@@ -2,7 +2,7 @@
 
 ## Dashboard Screenshot
 
-![Dashboard](Mini-Subsea-SCADA-Node-RED-Flow-screenshot)
+![Dashboard](Mini-Subsea-SCADA-Node-RED-Flow-screenshot.png)
 
 ## Project Overview
 
