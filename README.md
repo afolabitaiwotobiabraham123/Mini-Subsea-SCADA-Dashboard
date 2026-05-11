@@ -1,5 +1,9 @@
 # Mini Subsea SCADA System (3 Wells + Manifold)
 
+## Mini Subsea SCADA Node-RED Flow Screenshot
+
+![Mini Subsea SCADA Node-RED Flow](Mini Subsea SCADA Node-RED Flow.png)
+
 ## Project Overview
 
 This project is a Mini Subsea SCADA System simulation built using Node-RED and Dashboard 2.0.
